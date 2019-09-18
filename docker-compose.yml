@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  db:
+    image: linuxserver/mariadb
+    #command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes:
+      - /mnt/db:/config
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD="secure"
+      - MYSQL_PASSWORD="secure"
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  app:
+    image: yaakov/nextcloud
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - db
+    volumes:
+      - /mnt/data:/var/www/html
+    restart: always
